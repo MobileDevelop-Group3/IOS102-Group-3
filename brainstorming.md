@@ -57,22 +57,19 @@ title: Brainstorming
 
 ---
 
-### Member 3: [Name]
+### Member 3: Raul Henriquez
 
-1. **[App Idea 1]**
-* **Category:**
-* **Description:**
+**1. SplitWise: Shared Expense Tracker**
+- **Category:** Finance, Productivity
+- **Description:** Allows users to track and split expenses among friends, roommates, or groups. Users can create groups, upload receipts, assign individual expenses, and monitor outstanding balances. The app automatically calculates who owes whom and simplifies group payments.
 
+**2. SpotFinder: Smart Parking Assistant**
+- **Category:** Navigation, Transportation, Productivity
+- **Description:** Helps users find available parking spaces near their destination. Users can view nearby parking garages, compare parking rates, save their parking locations, and receive navigation directions. The app can also display real-time parking availability where supported.
 
-2. **[App Idea 2]**
-* **Category:**
-* **Description:**
-
-
-3. **[App Idea 3]**
-* **Category:**
-* **Description:**
-
+**3. SkillSwap: Peer-to-Peer Learning Platform**
+- **Category:** Education, Social, Productivity
+- **Description:** Connects users who want to exchange knowledge and learn new skills from one another. Users can create profiles listing skills they can teach and skills they want to learn, discover compatible users, schedule learning sessions, and track their progress.
 
 
 ---
