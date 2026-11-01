@@ -68,21 +68,21 @@ title: Untitled
 
 ---
 
-### Member 2: [Name]
+### Member 2: Jherson Hernandez
 
-1. **[App Idea 1]**
-* **Category:**
-* **Description:**
-
-
-2. **[App Idea 2]**
-* **Category:**
-* **Description:**
+1. **Trip Mate: Travel Planner**
+* **Category:** Travel, Productivity
+* **Description:** Users can create trips, save destinations, organize activities by day, view locations on a map, and share itineraries with friends.
 
 
-3. **[App Idea 3]**
-* **Category:**
-* **Description:**
+2. **RepTrack: Fitness tracker**
+* **Category:** Health & Fitness, Productivity
+* **Description:** Users can create workout routines, track exercises, record weights and repetitions, and monitor their progress over time.
+
+
+3. **LinkUp: Social event discovery**
+* **Category:** Social, Entertainment
+* **Description:** Users can discover nearby events, create plans with friends, RSVP to activities, and share events they are interested in.
 
 
 
