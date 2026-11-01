@@ -1,5 +1,5 @@
 ---
-title: Untitled
+title: Brainstorming
 
 ---
 
@@ -131,10 +131,8 @@ title: Untitled
 * **Story:**
 * **Market:**
 * **Habit:**
-* **Scope:**
-* **V1:**
-* **V2:**
-* **V3:**
+* **Scope:** V1,V2,V3
+
 
 
 
@@ -146,10 +144,8 @@ title: Untitled
 * **Story:**
 * **Market:**
 * **Habit:**
-* **Scope:**
-* **V1:**
-* **V2:**
-* **V3:**
+* **Scope:** V1,V2,V3
+
 
 
 
@@ -161,7 +157,5 @@ title: Untitled
 * **Story:**
 * **Market:**
 * **Habit:**
-* **Scope:**
-* **V1:**
-* **V2:**
-* **V3:**
+* **Scope:** V1,V2,V3
+
