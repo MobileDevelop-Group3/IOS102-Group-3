@@ -9,40 +9,9 @@ title: Untitled
 
 ## Instructions
 
-1. **Favorite Existing Apps**: List and evaluate a few apps your group uses regularly.
-2. **Brainstorming**: Each member adds **at least 3 new app ideas** under their designated section with brief descriptions.
-3. **Selection**: Vote as a group to pick your **Top 3 Ideas**.
-4. **Evaluation**: Fill out the detailed evaluation framework for your top 3 choices.
-
----
-
-## Favorite Existing Apps - List
-
-1. Instagram
-2. 
-3. 
-4. 
-5. 
-
-## Favorite Existing Apps - Categorize and Evaluate
-
-### [Instagram]
-
-* **Category:**
-* **Mobile:**
-* **Story:**
-* **Market:**
-* **Habit:**
-* **Scope:**
-
-### [AppName 2]
-
-* **Category:**
-* **Mobile:**
-* **Story:**
-* **Market:**
-* **Habit:**
-* **Scope:**
+1. **Brainstorming**: Each member adds **at least 3 new app ideas** under their designated section with brief descriptions.
+2. **Selection**: Vote as a group to pick your **Top 3 Ideas**.
+3. **Evaluation**: Fill out the detailed evaluation framework for your top 3 choices.
 
 ---
 
