@@ -112,7 +112,7 @@ title: Untitled
 * **Category:**
 * **Description:**
 
-
+---
 
 ## Top 3 Selected App Ideas
 1. 
