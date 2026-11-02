@@ -80,8 +80,11 @@ CampusSpot is a mobile application designed for university students to discover,
 
 ## Wireframes
 
-> [Add picture of your hand sketched wireframes in this section]
-> `![Hand-sketched Wireframes](path/to/image.jpg)`
+### Hand-Sketched Wireframes
+
+The following PDF contains the hand-sketched wireframes for CampusSpot, illustrating the app's screens and navigation.
+
+[View Hand-Sketched Wireframes (PDF)](Wireframe/Hand-Sketched%20Wireframe%20Project.pdf)
 
 ### [BONUS] Digital Wireframes & Mockups
 
