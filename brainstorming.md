@@ -74,7 +74,7 @@ title: Brainstorming
 
 ---
 
-### Member 4: [Name]
+### Member 4: Bryan Mayea
 
 1. **[App Idea 1]**
 * **Category:**
@@ -93,7 +93,7 @@ title: Brainstorming
 
 ---
 
-### Member 5: [Name]
+### Member 5: Joshua Castillo
 
 1. **[App Idea 1]**
 * **Category:**
