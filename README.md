@@ -86,7 +86,12 @@ The following PDF contains the hand-sketched wireframes for CampusSpot, illustra
 
 [View Hand-Sketched Wireframes (PDF)](Wireframe/Hand-Sketched%20Wireframe%20Project.pdf)
 
-### [BONUS] Digital Wireframes & Mockups
+### Digital Wireframes & Mockups
+
+The following digital wireframes illustrate the 12 CampusSpot screens and their layouts.
+
+![CampusSpot Digital Wireframes](Wireframe/Digital%20Wireframe.png)
+
 
 ### [BONUS] Interactive Prototype
 
