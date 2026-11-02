@@ -127,7 +127,7 @@ title: Brainstorming
 
 ## Top Ideas - Evaluate and Categorize
 
-### 1. CampusSpot - Campus Study Space Finder
+### 1. CampusSpot - Campus Study Space Finder (FINAL IDEA)
 
 * **Description:** CampusSpot is a mobile application designed for university students to discover, review, and bookmark the best study spots on campus. Whether you're looking for a quiet corner, a collaborative group room, or a hidden gem on campus; CampusSpot helps you find your ideal productivity environment based on real student ratings and live filters.
 
