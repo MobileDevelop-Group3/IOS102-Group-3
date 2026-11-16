@@ -188,6 +188,14 @@ The following network requests describe the planned backend functionality.
 
 CampusSpot is currently implemented using SwiftUI.
 
+---
+
+## App Demo
+
+The following GIF demonstrates the CampusSpot application, including its login flow and navigation.
+
+![CampusSpot Demo](Current%20Status%20(1).gif)
+
 ### Completed Functionality
 
 - Welcome, Login, and Sign Up interfaces.
