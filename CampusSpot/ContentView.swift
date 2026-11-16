@@ -2,10 +2,10 @@
 import SwiftUI
 
 // MARK: - Main Content View
-
-struct ContentView: View {
-    @State private var currentScreen = "welcome"
-
+    struct ContentView: View {
+        @AppStorage("campusSpotIsLoggedIn") private var isLoggedIn = false
+        @State private var currentScreen = "welcome"
+        
     var body: some View {
         NavigationStack {
             Group {
@@ -24,8 +24,10 @@ struct ContentView: View {
                             currentScreen = "welcome"
                         },
                         onLogin: {
+                            isLoggedIn = true
                             currentScreen = "home"
                         }
+                        
                     )
 
                 case "signup":
@@ -39,7 +41,11 @@ struct ContentView: View {
                     )
 
                 case "home":
-                    MainTabView()
+
+                    MainTabView(onLogout: {
+                        isLoggedIn = false
+                        currentScreen = "login"
+                    })
 
                 default:
                     WelcomeView {
@@ -49,8 +55,14 @@ struct ContentView: View {
             }
             .animation(.easeInOut, value: currentScreen)
         }
+        .onAppear {
+            currentScreen = isLoggedIn ? "home" : "welcome"
+        }
     }
-}
+
+        }
+    
+
 
 // MARK: - CampusSpot Header
 
@@ -511,6 +523,7 @@ let studySpots: [StudySpot] = [
 // MARK: - Main Tab Navigation
 
 struct MainTabView: View {
+    var onLogout: () -> Void
     var body: some View {
         TabView {
             HomeView()
@@ -528,7 +541,7 @@ struct MainTabView: View {
                     Label("Bookmarks", systemImage: "bookmark")
                 }
 
-            ProfileView()
+            ProfileView(onLogout: onLogout)
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
@@ -852,6 +865,7 @@ struct BookmarksView: View {
 // MARK: - Profile Tab
 
 struct ProfileView: View {
+    var onLogout: () -> Void
     var body: some View {
         NavigationStack {
             VStack(spacing: 15) {
@@ -870,7 +884,10 @@ struct ProfileView: View {
                 Text("Your profile information will appear here.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-
+                Button("Log out", role: .destructive) {
+                    onLogout()
+                }
+                .padding(.top, 12)
                 Spacer()
             }
             .toolbar(.hidden, for: .navigationBar)
@@ -883,4 +900,5 @@ struct ProfileView: View {
 #Preview {
     ContentView()
 }
+
 
