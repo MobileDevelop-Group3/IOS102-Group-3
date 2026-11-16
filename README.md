@@ -1,27 +1,30 @@
-# IOS102-Group-3- App Design Project
+# IOS102-Group-3 - App Design Project
 
-## CampusSpot 
+# CampusSpot
 
 ## Table of Contents
 1. [Overview](#overview)
 2. [Product Spec](#product-spec)
 3. [Wireframes](#wireframes)
 4. [Schema](#schema)
+5. [Current Implementation](#current-implementation)
 
 ---
 
 ## Overview
 
 ### Description
-CampusSpot is a mobile application designed for university students to discover, review, and bookmark the best study spots on campus. Whether you're looking for a quiet corner, a collaborative group room, or a hidden gem on campus; CampusSpot helps you find your ideal productivity environment based on real student ratings and live filters.
+
+CampusSpot is a mobile application designed for university students to discover, review, and bookmark the best study spots on campus. Whether you're looking for a quiet corner, a collaborative group room, or a hidden gem on campus, CampusSpot helps you find your ideal productivity environment based on student information and location details.
 
 ### App Evaluation
+
 * **Category:** Education / Productivity / Utility
 * **Mobile:** Designed primarily as a mobile application (iOS) for students on the move, with responsive layouts for quick on-campus access.
-* **Story:** Tells the story of stressed students navigating campus looking for available, high-quality study spaces, transforming a frustrating search into a seamless experience.
+* **Story:** Helps students find available study spaces on campus, making it easier to choose an environment that fits their needs.
 * **Market:** College and university students, study groups, and campus organizations.
-* **Habit:** Daily or weekly use app, especially utilized during midterms, finals, or between classes when students need a reliable workspace.
-* **Scope:** Focused feature set covering user accounts, location browsing, interactive map/list filtering, user reviews with photo uploads, and bookmarking.
+* **Habit:** Daily or weekly use app, especially during midterms, finals, or between classes.
+* **Scope:** Focused feature set covering user accounts, location browsing, search, reviews, and bookmarking.
 
 ---
 
@@ -30,51 +33,69 @@ CampusSpot is a mobile application designed for university students to discover,
 ### 1. User Stories (Required & Optional)
 
 **Required Must-have Stories**
+
+- [x] User can log in using demo credentials.
 - [ ] User can register a new account and log in securely.
-- [ ] User can browse a list of campus study locations with key details (noise level, seating capacity, power outlet availability).
-- [ ] User can search for study locations by name or keyword.
+- [x] User can browse a list of campus study locations with descriptions and study environments.
+- [x] User can search for study locations by name or keyword.
 - [ ] User can filter locations based on specific attributes (e.g., quiet zone, has outlets, open late).
-- [ ] User can view detailed information for a specific study spot, including aggregated ratings, reviews, and uploaded photos.
+- [x] User can view details and descriptions for a specific study spot.
 - [ ] User can submit a review and upload a photo for a study location.
 - [ ] User can bookmark or save favorite locations to a personal "Saved Spots" list.
 
 **Optional Nice-to-have Stories**
+
 - [ ] User can view locations on an interactive campus map.
 - [ ] User can see real-time or crowdsourced busyness/crowd level indicators.
 - [ ] User can edit or delete their own reviews and uploaded photos.
 - [ ] User profile screen displaying user stats (number of reviews posted, saved spots).
 
 ### 2. Screen Archetypes
-- [ ] **Login / Registration Screen**
-  - Allows users to sign up or log in to their account.
-- [ ] **Home / Browse Feed Screen**
-  - Displays a scrollable list of popular or nearby study locations with quick tags (noise level, outlets).
-- [ ] **Search & Filter Screen**
-  - Enables users to filter spots by specific criteria and search by name.
-- [ ] **Location Detail Screen**
-  - Shows full information about a spot (photos, reviews, descriptions, amenities) with options to bookmark or add a review.
+
+- [x] **Welcome Screen**
+  - Introduces CampusSpot and provides access to the login flow.
+- [x] **Login Screen**
+  - Allows users to log in using the demo credentials.
+- [x] **Registration Screen**
+  - Registration interface is available; actual account creation is not implemented yet.
+- [x] **Home / Browse Feed Screen**
+  - Displays a featured study spot and campus browsing options.
+- [x] **Search Screen**
+  - Enables users to search study spots by name, description, or campus.
+- [x] **Location Detail Screen**
+  - Displays the study spot's description, campus, and study environment.
 - [ ] **Add Review Screen**
-  - Allows users to rate a spot, write a review, and attach a photo.
-- [ ] **Profile / Bookmarks Screen**
-  - Displays user account details and a list of bookmarked/saved study spots.
+  - Review submission and photo uploads are not implemented yet.
+- [x] **Bookmarks Screen**
+  - Bookmarks tab is available; saving and displaying bookmarks are not implemented yet.
+- [x] **Profile Screen**
+  - Profile tab is available with logout functionality. User profile information is not implemented yet.
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
-- [Home / Browse Tab] -> Home Feed Screen
-- [Search / Filter Tab] -> Search & Filter Screen
-- [Bookmarks Tab] -> Saved Spots Screen
-- [Profile Tab] -> Profile Screen
+
+- Home Tab -> Home Feed Screen
+- Search Tab -> Search Screen
+- Bookmarks Tab -> Saved Spots Screen
+- Profile Tab -> Profile Screen
 
 **Flow Navigation** (Screen to Screen)
+
+- **Welcome Screen**
+  - Leads to Login Screen.
+- **Login Screen**
+  - Leads to Sign Up Screen.
+  - Successful demo login leads to Home Feed Screen.
+- **Sign Up Screen**
+  - Allows users to return to Login Screen.
 - **Home Feed Screen**
-  - Leads to **Location Detail Screen** (upon tapping a spot)
-- **Search & Filter Screen**
-  - Leads to **Location Detail Screen** (upon selecting a search result)
-- **Location Detail Screen**
-  - Leads to **Add Review Screen** (upon tapping "Write a Review")
+  - Leads to Location Detail Screen when selecting a study spot.
+  - Allows users to browse locations by campus.
+- **Search Screen**
+  - Leads to Location Detail Screen when selecting a search result.
 - **Profile Screen**
-  - Leads to **Login Screen** (upon logging out)
+  - Allows users to log out and return to the Login Screen.
 
 ---
 
@@ -88,10 +109,9 @@ The following PDF contains the hand-sketched wireframes for CampusSpot, illustra
 
 ### Digital Wireframes & Mockups
 
-The following digital wireframes illustrate the 12 CampusSpot screens and their layouts.
+The following digital wireframes illustrate the planned CampusSpot screens and their layouts.
 
 ![CampusSpot Digital Wireframes](Wireframe/Digital%20Wireframe.png)
-
 
 ### [BONUS] Interactive Prototype
 
@@ -101,56 +121,93 @@ The following digital wireframes illustrate the 12 CampusSpot screens and their 
 
 ### Models
 
+The following models describe the planned backend data structure.
+
 #### User
+
 | Property | Type | Description |
 | --- | --- | --- |
-| `objectId` | String | unique id for the user (default field) |
-| `username` | String | unique username for login |
-| `email` | String | user's email address |
-| `password` | String | user's password for login authentication |
-| `createdAt` | DateTime | date/time when user account is created |
+| `objectId` | String | Unique ID for the user (default field) |
+| `username` | String | Unique username for login |
+| `email` | String | User's email address |
+| `password` | String | User's password for login authentication |
+| `createdAt` | DateTime | Date/time when user account is created |
 
 #### Location
+
 | Property | Type | Description |
 | --- | --- | --- |
-| `objectId` | String | unique id for the study location |
-| `name` | String | name of the building/room (e.g., Green Library 2nd Floor) |
-| `description` | String | details about the space, seating, and atmosphere |
-| `noiseLevel` | String | e.g., "Quiet", "Moderate", "Loud / Collaborative" |
-| `hasOutlets` | Boolean | true if power outlets are readily available |
-| `image` | File | hero photo of the study location |
-| `averageRating` | Number | average rating calculated from reviews |
+| `objectId` | String | Unique ID for the study location |
+| `name` | String | Name of the building/room |
+| `description` | String | Details about the space, seating, and atmosphere |
+| `noiseLevel` | String | Example: Quiet, Moderate, or Loud / Collaborative |
+| `hasOutlets` | Boolean | True if power outlets are readily available |
+| `image` | File | Hero photo of the study location |
+| `averageRating` | Number | Average rating calculated from reviews |
 
 #### Review
+
 | Property | Type | Description |
 | --- | --- | --- |
-| `objectId` | String | unique id for the review |
-| `author` | Pointer (User) | user who wrote the review |
-| `location` | Pointer (Location) | study spot being reviewed |
-| `rating` | Number | star rating (1-5) |
-| `comment` | String | text feedback about the spot |
-| `photo` | File | optional photo uploaded by the student |
-| `createdAt` | DateTime | date/time when review was posted |
+| `objectId` | String | Unique ID for the review |
+| `author` | Pointer (User) | User who wrote the review |
+| `location` | Pointer (Location) | Study spot being reviewed |
+| `rating` | Number | Star rating (1-5) |
+| `comment` | String | Text feedback about the spot |
+| `photo` | File | Optional photo uploaded by the student |
+| `createdAt` | DateTime | Date/time when review was posted |
 
 #### Bookmark
+
 | Property | Type | Description |
 | --- | --- | --- |
-| `objectId` | String | unique id for the bookmark entry |
-| `user` | Pointer (User) | user who saved the location |
-| `location` | Pointer (Location) | study spot that was bookmarked |
+| `objectId` | String | Unique ID for the bookmark entry |
+| `user` | Pointer (User) | User who saved the location |
+| `location` | Pointer (Location) | Study spot that was bookmarked |
 
 ### Networking
 
-- **List of network requests by screen:**
-  - **Home Feed Screen**
-    - `[GET]` Query all `Location` objects to display in the feed.
-  - **Search & Filter Screen**
-    - `[GET]` Query `Location` objects matching search query string or filter constraints (e.g., `hasOutlets == true`).
-  - **Location Detail Screen**
-    - `[GET]` Query `Review` objects where `location` matches the current spot.
-    - `[POST]` Create a new `Bookmark` object when the user taps save.
-    - `[DELETE]` Delete the `Bookmark` object when the user unsaves.
-  - **Add Review Screen**
-    - `[POST]` Create a new `Review` object linked to the current user and location.
-  - **Profile / Bookmarks Screen**
-    - `[GET]` Query `Bookmark` objects where `user` matches the current user to display saved spots.
+The following network requests describe the planned backend functionality.
+
+- **Home Feed Screen**
+  - `[GET]` Query all `Location` objects to display in the feed.
+- **Search Screen**
+  - `[GET]` Query `Location` objects matching a search query or filter constraints.
+- **Location Detail Screen**
+  - `[GET]` Query `Review` objects where `location` matches the current spot.
+  - `[POST]` Create a new `Bookmark` object when the user taps save.
+  - `[DELETE]` Delete the `Bookmark` object when the user unsaves.
+- **Add Review Screen**
+  - `[POST]` Create a new `Review` object linked to the current user and location.
+- **Profile / Bookmarks Screen**
+  - `[GET]` Query `Bookmark` objects where `user` matches the current user to display saved spots.
+
+---
+
+## Current Implementation
+
+CampusSpot is currently implemented using SwiftUI.
+
+### Completed Functionality
+
+- Welcome, Login, and Sign Up interfaces.
+- Demo login authentication using hardcoded credentials.
+- Persistent login session using local app storage.
+- Automatic navigation to Home when reopening the app with an active session.
+- Logout functionality that clears the saved login session.
+- Main tab navigation with Home, Search, Bookmarks, and Profile.
+- Home feed featuring a study spot and campus browsing.
+- Study spot listings for MMC, BBC, and the Engineering Center.
+- Search functionality across study spot names, descriptions, and campus names.
+- Study spot detail pages with descriptions and study environments.
+
+### Demo Login Credentials
+
+- **Email:** `demo@campusspot.com`
+- **Password:** `Campus123!`
+
+### Current Development Notes
+
+- Study spot information is currently stored locally in the Swift code.
+- Login uses demo credentials and does not yet connect to a backend authentication service.
+- Account registration, reviews, photo uploads, bookmarks, and backend networking are planned for future implementation.
