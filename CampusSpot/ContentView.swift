@@ -1,11 +1,11 @@
-
 import SwiftUI
+import ParseSwift
 
 // MARK: - Main Content View
-    struct ContentView: View {
-        @AppStorage("campusSpotIsLoggedIn") private var isLoggedIn = false
-        @State private var currentScreen = "welcome"
-        
+struct ContentView: View {
+    @AppStorage("campusSpotIsLoggedIn") private var isLoggedIn = false
+    @State private var currentScreen = "welcome"
+
     var body: some View {
         NavigationStack {
             Group {
@@ -27,7 +27,6 @@ import SwiftUI
                             isLoggedIn = true
                             currentScreen = "home"
                         }
-                        
                     )
 
                 case "signup":
@@ -37,14 +36,22 @@ import SwiftUI
                         },
                         onBack: {
                             currentScreen = "login"
+                        },
+                        onSignedUp: {
+                            isLoggedIn = true
+                            currentScreen = "home"
                         }
                     )
 
                 case "home":
-
                     MainTabView(onLogout: {
-                        isLoggedIn = false
-                        currentScreen = "login"
+                        Task {
+                            try? await User.logout()
+                            await MainActor.run {
+                                isLoggedIn = false
+                                currentScreen = "login"
+                            }
+                        }
                     })
 
                 default:
@@ -56,13 +63,12 @@ import SwiftUI
             .animation(.easeInOut, value: currentScreen)
         }
         .onAppear {
-            currentScreen = isLoggedIn ? "home" : "welcome"
+            let authenticated = User.current != nil || isLoggedIn
+            isLoggedIn = authenticated
+            currentScreen = authenticated ? "home" : "welcome"
         }
     }
-
-        }
-    
-
+}
 
 // MARK: - CampusSpot Header
 
@@ -147,12 +153,10 @@ struct LoginView: View {
 
     @State private var email = ""
     @State private var password = ""
+    @State private var errorMessage = ""
+    @State private var isLoading = false
     @State private var showForgotPassword = false
     @State private var showLoginError = false
-
-    // Temporary demo credentials
-    private let demoEmail = "demo@campusspot.com"
-    private let demoPassword = "Campus123!"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -197,31 +201,24 @@ struct LoginView: View {
                     .foregroundStyle(.secondary)
                 }
 
-                Button(action: {
-                    if email.lowercased() == demoEmail &&
-                        password == demoPassword {
-                        onLogin()
+                Button(action: performLogin) {
+                    if isLoading {
+                        ProgressView()
+                            .tint(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
                     } else {
-                        showLoginError = true
+                        Text("Log in")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
                     }
-                }) {
-                    Text("Log in")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 7))
                 }
+                .background(Color.accentColor)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 7))
+                .disabled(isLoading)
                 .padding(.top, 12)
-
-                Text("Demo: demo@campusspot.com")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Text("Password: Campus123!")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
             .padding(.horizontal, 24)
             .padding(.top, 45)
@@ -255,7 +252,33 @@ struct LoginView: View {
         .alert("Login Failed", isPresented: $showLoginError) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text("Please enter the correct demo email and password.")
+            Text(errorMessage.isEmpty ? "Please check your email and password." : errorMessage)
+        }
+    }
+
+    private func performLogin() {
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !trimmedEmail.isEmpty, !password.isEmpty else {
+            errorMessage = "Please enter your email and password."
+            showLoginError = true
+            return
+        }
+
+        isLoading = true
+        Task {
+            do {
+                _ = try await User.login(username: trimmedEmail, password: password)
+                await MainActor.run {
+                    isLoading = false
+                    onLogin()
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading = false
+                    errorMessage = error.localizedDescription
+                    showLoginError = true
+                }
+            }
         }
     }
 }
@@ -265,12 +288,16 @@ struct LoginView: View {
 struct SignUpView: View {
     var onLogin: () -> Void
     var onBack: () -> Void
+    var onSignedUp: (() -> Void)? = nil
 
     @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
-    @State private var showSignUpMessage = false
+    @State private var errorMessage = ""
+    @State private var isLoading = false
+    @State private var showError = false
+    @State private var showSuccess = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -309,17 +336,23 @@ struct SignUpView: View {
                     secure: true
                 )
 
-                Button(action: {
-                    showSignUpMessage = true
-                }) {
-                    Text("Create account")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.accentColor)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 7))
+                Button(action: performSignUp) {
+                    if isLoading {
+                        ProgressView()
+                            .tint(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    } else {
+                        Text("Create account")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    }
                 }
+                .background(Color.accentColor)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 7))
+                .disabled(isLoading)
                 .padding(.top, 5)
             }
             .padding(.horizontal, 24)
@@ -337,10 +370,61 @@ struct SignUpView: View {
             .font(.caption)
             .padding(.bottom, 40)
         }
-        .alert("Demo Mode", isPresented: $showSignUpMessage) {
+        .alert("Sign Up Failed", isPresented: $showError) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text("Account registration will be connected when authentication is implemented.")
+            Text(errorMessage.isEmpty ? "Could not create account." : errorMessage)
+        }
+        .alert("Account Created", isPresented: $showSuccess) {
+            Button("Continue") {
+                if let onSignedUp {
+                    onSignedUp()
+                } else {
+                    onLogin()
+                }
+            }
+        } message: {
+            Text("Your account is ready.")
+        }
+    }
+
+    private func performSignUp() {
+        let trimmedName = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        guard !trimmedName.isEmpty, !trimmedEmail.isEmpty, !password.isEmpty else {
+            errorMessage = "Please fill in all fields."
+            showError = true
+            return
+        }
+
+        guard password == confirmPassword else {
+            errorMessage = "Passwords do not match."
+            showError = true
+            return
+        }
+
+        isLoading = true
+        var newUser = User()
+        newUser.username = trimmedEmail
+        newUser.email = trimmedEmail
+        newUser.password = password
+        newUser.fullName = trimmedName
+
+        Task {
+            do {
+                _ = try await newUser.signup()
+                await MainActor.run {
+                    isLoading = false
+                    showSuccess = true
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading = false
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
         }
     }
 
@@ -400,11 +484,34 @@ enum Campus: String, CaseIterable, Identifiable {
 }
 
 struct StudySpot: Identifiable {
-    let id = UUID()
+    let id: String
     let name: String
     let campus: Campus
     let description: String
     let environment: String
+    var noiseLevel: String? = nil
+    var hasOutlets: Bool? = nil
+    var averageRating: Double? = nil
+
+    init(
+        id: String = UUID().uuidString,
+        name: String,
+        campus: Campus,
+        description: String,
+        environment: String,
+        noiseLevel: String? = nil,
+        hasOutlets: Bool? = nil,
+        averageRating: Double? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.campus = campus
+        self.description = description
+        self.environment = environment
+        self.noiseLevel = noiseLevel
+        self.hasOutlets = hasOutlets
+        self.averageRating = averageRating
+    }
 }
 
 let studySpots: [StudySpot] = [
@@ -524,14 +631,22 @@ let studySpots: [StudySpot] = [
 
 struct MainTabView: View {
     var onLogout: () -> Void
+
+    @State private var locations: [Location] = []
+    @State private var isLoadingLocations = false
+
+    private var spots: [StudySpot] {
+        locations.isEmpty ? studySpots : locations.map { $0.toStudySpot() }
+    }
+
     var body: some View {
         TabView {
-            HomeView()
+            HomeView(spots: spots, isLoading: isLoadingLocations, onRefresh: loadLocations)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
 
-            SearchView()
+            SearchView(spots: spots, onRefresh: loadLocations)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
@@ -547,28 +662,53 @@ struct MainTabView: View {
                 }
         }
         .tint(.accentColor)
+        .task {
+            if locations.isEmpty {
+                await loadLocations()
+            }
+        }
+    }
+
+    private func loadLocations() async {
+        isLoadingLocations = true
+        defer { isLoadingLocations = false }
+        do {
+            locations = try await BackendService.fetchLocations()
+        } catch {
+            print("Failed to fetch locations: \(error.localizedDescription)")
+        }
     }
 }
 
 // MARK: - Home Feed
 
 struct HomeView: View {
+    let spots: [StudySpot]
+    var isLoading: Bool = false
+    var onRefresh: (() async -> Void)? = nil
+
+    private var featuredSpot: StudySpot {
+        spots.first ?? studySpots[0]
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     CampusSpotHeader()
 
+                    if isLoading && spots.isEmpty {
+                        ProgressView("Loading study spots...")
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 30)
+                    }
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Featured Study Spot")
                             .font(.title2)
                             .fontWeight(.semibold)
 
-                        NavigationLink(
-                            destination: StudySpotDetailView(
-                                spot: studySpots[0]
-                            )
-                        ) {
+                        NavigationLink(destination: StudySpotDetailView(spot: featuredSpot)) {
                             VStack(alignment: .leading, spacing: 10) {
                                 ZStack(alignment: .bottomLeading) {
                                     RoundedRectangle(cornerRadius: 12)
@@ -580,7 +720,7 @@ struct HomeView: View {
                                         .foregroundStyle(.blue.opacity(0.7))
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                                    Text("MMC")
+                                    Text(featuredSpot.campus.shortName)
                                         .font(.caption)
                                         .fontWeight(.semibold)
                                         .padding(.horizontal, 10)
@@ -590,15 +730,15 @@ struct HomeView: View {
                                         .padding(12)
                                 }
 
-                                Text("Steven and Dorothea Green Library")
+                                Text(featuredSpot.name)
                                     .font(.headline)
                                     .foregroundStyle(.primary)
 
-                                Text("A main study hub with quiet floors, computer labs, and group study rooms.")
+                                Text(featuredSpot.description)
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
 
-                                Label("Quiet and Collaborative", systemImage: "book")
+                                Label(featuredSpot.environment, systemImage: "book")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -616,8 +756,9 @@ struct HomeView: View {
                             .fontWeight(.semibold)
 
                         ForEach(Campus.allCases) { campus in
+                            let campusSpots = spots.filter { $0.campus == campus }
                             NavigationLink(
-                                destination: CampusLocationsView(campus: campus)
+                                destination: CampusLocationsView(campus: campus, spots: campusSpots)
                             ) {
                                 HStack(spacing: 15) {
                                     Image(systemName: campus.symbol)
@@ -632,7 +773,7 @@ struct HomeView: View {
                                             .font(.headline)
                                             .foregroundStyle(.primary)
 
-                                        Text("\(studySpots.filter { $0.campus == campus }.count) study spots")
+                                        Text("\(campusSpots.count) study spots")
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
@@ -653,6 +794,9 @@ struct HomeView: View {
                 }
                 .padding(.bottom, 25)
             }
+            .refreshable {
+                await onRefresh?()
+            }
             .background(Color(.systemBackground))
             .toolbar(.hidden, for: .navigationBar)
         }
@@ -663,10 +807,7 @@ struct HomeView: View {
 
 struct CampusLocationsView: View {
     let campus: Campus
-
-    private var locations: [StudySpot] {
-        studySpots.filter { $0.campus == campus }
-    }
+    let spots: [StudySpot]
 
     var body: some View {
         ScrollView {
@@ -680,10 +821,8 @@ struct CampusLocationsView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                ForEach(locations) { spot in
-                    NavigationLink(
-                        destination: StudySpotDetailView(spot: spot)
-                    ) {
+                ForEach(spots) { spot in
+                    NavigationLink(destination: StudySpotDetailView(spot: spot)) {
                         StudySpotRow(spot: spot)
                     }
                     .buttonStyle(.plain)
@@ -699,17 +838,21 @@ struct CampusLocationsView: View {
 // MARK: - Search Screen
 
 struct SearchView: View {
+    let spots: [StudySpot]
+    var onRefresh: (() async -> Void)? = nil
+
     @State private var searchText = ""
 
     private var filteredSpots: [StudySpot] {
         if searchText.isEmpty {
-            return studySpots
+            return spots
         }
 
-        return studySpots.filter {
+        return spots.filter {
             $0.name.localizedCaseInsensitiveContains(searchText) ||
             $0.description.localizedCaseInsensitiveContains(searchText) ||
-            $0.campus.rawValue.localizedCaseInsensitiveContains(searchText)
+            $0.campus.rawValue.localizedCaseInsensitiveContains(searchText) ||
+            ($0.noiseLevel?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
     }
 
@@ -739,13 +882,14 @@ struct SearchView: View {
                 .padding()
 
                 List(filteredSpots) { spot in
-                    NavigationLink(
-                        destination: StudySpotDetailView(spot: spot)
-                    ) {
+                    NavigationLink(destination: StudySpotDetailView(spot: spot)) {
                         StudySpotRow(spot: spot)
                     }
                 }
                 .listStyle(.plain)
+                .refreshable {
+                    await onRefresh?()
+                }
             }
             .toolbar(.hidden, for: .navigationBar)
         }
@@ -900,5 +1044,3 @@ struct ProfileView: View {
 #Preview {
     ContentView()
 }
-
-
