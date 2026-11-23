@@ -492,6 +492,7 @@ struct StudySpot: Identifiable {
     var noiseLevel: String? = nil
     var hasOutlets: Bool? = nil
     var averageRating: Double? = nil
+    var imageName: String? = nil
 
     init(
         id: String = UUID().uuidString,
@@ -501,7 +502,8 @@ struct StudySpot: Identifiable {
         environment: String,
         noiseLevel: String? = nil,
         hasOutlets: Bool? = nil,
-        averageRating: Double? = nil
+        averageRating: Double? = nil,
+        imageName: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -511,6 +513,7 @@ struct StudySpot: Identifiable {
         self.noiseLevel = noiseLevel
         self.hasOutlets = hasOutlets
         self.averageRating = averageRating
+        self.imageName = imageName
     }
 }
 
@@ -521,61 +524,71 @@ let studySpots: [StudySpot] = [
         name: "Steven and Dorothea Green Library",
         campus: .mmc,
         description: "Main library with computer labs, seating, quiet floors, and reservable study rooms.",
-        environment: "Quiet and Collaborative"
+        environment: "Quiet and Collaborative",
+        imageName: "GreenLibrary"
     ),
     StudySpot(
         name: "MARC Building",
         campus: .mmc,
         description: "Popular study areas near the entrance and on the third floor.",
-        environment: "Quiet"
+        environment: "Quiet",
+        imageName: "MARC"
     ),
     StudySpot(
         name: "FIU Innovation Hub",
         campus: .mmc,
         description: "Flexible study space with high-top tables, cubicles, couches, and whiteboards.",
-        environment: "Collaborative"
+        environment: "Collaborative",
+        imageName: "InnovationHub"
     ),
     StudySpot(
         name: "Deuxieme Maison Sky Lounge",
         campus: .mmc,
         description: "Open-air courtyard with a relaxed atmosphere.",
-        environment: "Outdoor"
+        environment: "Outdoor",
+        imageName: "DeuxiemeMaison"
     ),
     StudySpot(
         name: "MANGO Building",
         campus: .mmc,
         description: "Academic building with study and academic spaces across six stories.",
-        environment: "Indoor"
+        environment: "Indoor",
+        imageName: "MANGO"
     ),
     StudySpot(
         name: "Graham Center",
         campus: .mmc,
         description: "Student center with social areas, food options, and quieter corners.",
-        environment: "Social and Collaborative"
+        environment: "Social and Collaborative",
+        imageName: "GrahamCenter"
     ),
     StudySpot(
         name: "Barnes & Noble at FIU",
         campus: .mmc,
         description: "Seating areas and a second-floor cafe.",
-        environment: "Relaxed"
+        environment: "Relaxed",
+        imageName: "BarnesNoble"
     ),
     StudySpot(
         name: "Chemistry and Physics Building",
         campus: .mmc,
         description: "Covered outdoor benches with roofs and solar-powered outlets.",
-        environment: "Outdoor"
+        environment: "Outdoor",
+        imageName: "ChemistryPhysics"
     ),
     StudySpot(
         name: "Green Lake and Campus Courtyards",
         campus: .mmc,
         description: "Outdoor benches and courtyard seating around Green Lake and campus.",
-        environment: "Outdoor"
+        environment: "Outdoor",
+        imageName: "GreenLake"
     ),
     StudySpot(
         name: "Chili's Outdoor Patio",
         campus: .mmc,
         description: "Outdoor patio overlooking the lake and fountain.",
-        environment: "Social and Outdoor"
+        environment: "Social and Outdoor",
+        imageName: "Chilis"
     ),
 
     // BBC
@@ -584,31 +597,36 @@ let studySpots: [StudySpot] = [
         name: "Hubert Library",
         campus: .bbc,
         description: "Main library with seating, computer labs, quiet zones, and reservable rooms.",
-        environment: "Quiet and Collaborative"
+        environment: "Quiet and Collaborative",
+        imageName: "HubertLibrary"
     ),
     StudySpot(
         name: "Academic Center 2",
         campus: .bbc,
         description: "Second-floor shaded benches for studying and group work.",
-        environment: "Outdoor and Collaborative"
+        environment: "Outdoor and Collaborative",
+        imageName: "AcademicCenter2"
     ),
     StudySpot(
         name: "Wolfe University Center",
         campus: .bbc,
         description: "Second and third-floor patios with tables, benches, couches, and student areas.",
-        environment: "Social and Collaborative"
+        environment: "Social and Collaborative",
+        imageName: "WolfeCenter"
     ),
     StudySpot(
         name: "By the Bay / Marine Science Area",
         campus: .bbc,
         description: "Outdoor study areas near the water with bay views.",
-        environment: "Outdoor and Quiet"
+        environment: "Outdoor and Quiet",
+        imageName: "MarineScience"
     ),
     StudySpot(
         name: "Aquatic Center Swinging Benches",
         campus: .bbc,
         description: "Scenic swinging benches near the water.",
-        environment: "Outdoor"
+        environment: "Outdoor",
+        imageName: "AquaticCenter"
     ),
 
     // Engineering Center
@@ -617,13 +635,15 @@ let studySpots: [StudySpot] = [
         name: "Engineering Library Services (EC-2780)",
         campus: .engineering,
         description: "Second-floor study space with quiet seating, group rooms, printing, and device checkouts.",
-        environment: "Quiet and Collaborative"
+        environment: "Quiet and Collaborative",
+        imageName: "EngineeringLibrary"
     ),
     StudySpot(
         name: "Engineering Information Center and Labs",
         campus: .engineering,
         description: "Specialized labs and group study areas. Some rooms require advance reservations.",
-        environment: "Academic and Collaborative"
+        environment: "Academic and Collaborative",
+        imageName: "EngineeringLabs"
     )
 ]
 
@@ -636,7 +656,7 @@ struct MainTabView: View {
     @State private var isLoadingLocations = false
 
     private var spots: [StudySpot] {
-        locations.isEmpty ? studySpots : locations.map { $0.toStudySpot() }
+        studySpots
     }
 
     var body: some View {
@@ -660,6 +680,8 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Profile", systemImage: "person")
                 }
+            
+            
         }
         .tint(.accentColor)
         .task {
@@ -711,14 +733,22 @@ struct HomeView: View {
                         NavigationLink(destination: StudySpotDetailView(spot: featuredSpot)) {
                             VStack(alignment: .leading, spacing: 10) {
                                 ZStack(alignment: .bottomLeading) {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.blue.opacity(0.12))
-                                        .frame(height: 190)
+                                    if let imageName = featuredSpot.imageName {
+                                        Image(imageName)
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(height: 190)
+                                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue.opacity(0.12))
+                                            .frame(height: 190)
 
-                                    Image(systemName: "books.vertical.fill")
-                                        .font(.system(size: 65))
-                                        .foregroundStyle(.blue.opacity(0.7))
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        Image(systemName: "books.vertical.fill")
+                                            .font(.system(size: 65))
+                                            .foregroundStyle(.blue.opacity(0.7))
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    }
 
                                     Text(featuredSpot.campus.shortName)
                                         .font(.caption)
@@ -761,11 +791,12 @@ struct HomeView: View {
                                 destination: CampusLocationsView(campus: campus, spots: campusSpots)
                             ) {
                                 HStack(spacing: 15) {
-                                    Image(systemName: campus.symbol)
-                                        .font(.title2)
+                                    Image(campus.rawValue == "Modesto A. Maidique Campus" ? "MMC" : campus.rawValue == "Biscayne Bay Campus" ? "BBC" : "Engineering")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 55, height: 55)
+                                        .clipped()
                                         .foregroundStyle(.blue)
-                                        .frame(width: 45, height: 45)
-                                        .background(Color.blue.opacity(0.1))
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
 
                                     VStack(alignment: .leading, spacing: 4) {
@@ -903,12 +934,20 @@ struct StudySpotRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: "mappin.and.ellipse")
-                .font(.title2)
-                .foregroundStyle(.blue)
-                .frame(width: 55, height: 55)
-                .background(Color.blue.opacity(0.1))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+            if let imageName = spot.imageName {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 55, height: 55)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            } else {
+                Image(systemName: "mappin.and.ellipse")
+                    .font(.title2)
+                    .foregroundStyle(.blue)
+                    .frame(width: 55, height: 55)
+                    .background(Color.blue.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(spot.name)
@@ -939,13 +978,21 @@ struct StudySpotDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.blue.opacity(0.12))
-                        .frame(height: 200)
+                    if let imageName = spot.imageName {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 200)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.blue.opacity(0.12))
+                            .frame(height: 200)
 
-                    Image(systemName: "mappin.and.ellipse")
-                        .font(.system(size: 65))
-                        .foregroundStyle(.blue)
+                        Image(systemName: "mappin.and.ellipse")
+                            .font(.system(size: 65))
+                            .foregroundStyle(.blue)
+                    }
                 }
 
                 Text(spot.name)
@@ -1028,6 +1075,8 @@ struct ProfileView: View {
                 Text("Your profile information will appear here.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+
+            
                 Button("Log out", role: .destructive) {
                     onLogout()
                 }
