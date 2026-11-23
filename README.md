@@ -197,7 +197,7 @@ The following GIF demonstrates the CampusSpot application, including its login f
 
 ### Completed Demo Day Prep Video
 
-[Current Status Video](https://youtube.com/shorts/Ac0ioidZSmw?feature=share)
+[Current Status Video](https://youtube.com/shorts/Cu1QT25VZb8)
 
 **Pending:** Final updates and descriptions from each team member.
 
