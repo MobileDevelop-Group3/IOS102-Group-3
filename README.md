@@ -195,10 +195,11 @@ The following GIF demonstrates the CampusSpot application, including its login f
 
 ![CampusSpot Demo](Current%20Status%20(1).gif)
 
-### Completed Demo Day prep video linked in README
+### Completed Demo Day Prep Video
 
-![Current Status Video](https://youtube.com/shorts/Ac0ioidZSmw?feature=share)
-Pending on final updates, and be discribed by team members.
+[Current Status Video](https://youtube.com/shorts/Ac0ioidZSmw?feature=share)
+
+**Pending:** Final updates and descriptions from each team member.
 
 ---
 ### Completed Functionality
