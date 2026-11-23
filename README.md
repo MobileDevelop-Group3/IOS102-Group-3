@@ -63,7 +63,7 @@ CampusSpot is a mobile application designed for university students to discover,
   - Enables users to search study spots by name, description, or campus.
 - [x] **Location Detail Screen**
   - Displays the study spot's description, campus, and study environment.
-- [ ] **Add Review Screen**
+- [x]  **Add Review Screen**
   - Review submission and photo uploads are not implemented yet.
 - [x] **Bookmarks Screen**
   - Bookmarks tab is available; saving and displaying bookmarks are not implemented yet.
@@ -216,11 +216,11 @@ The following GIF demonstrates the CampusSpot application, including its login f
 - Study spot detail pages with descriptions and study environments.
 - Images for every spot and campus.
 - Connected to backend for user sign up/ log in funcionality.
-- 
+- Bookmarks selection, and only visible for user.
+- Review submission, visible for all the users.
 
 
 ### Current Development Notes
 
-- Bookmarks Selections.
-- Reviews submissions.
+
 - Final meeting before final presentation.
