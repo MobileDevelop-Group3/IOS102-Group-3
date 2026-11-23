@@ -47,7 +47,7 @@ CampusSpot is a mobile application designed for university students to discover,
 
 - [ ] User can view locations on an interactive campus map.
 - [ ] User can see real-time or crowdsourced busyness/crowd level indicators.
-- [ ] User profile screen displaying user stats (number of reviews posted, saved spots).
+- [x] User profile screen displaying user stats (number of reviews posted, saved spots).
 
 ### 2. Screen Archetypes
 
@@ -197,7 +197,7 @@ The following GIF demonstrates the CampusSpot application, including its login f
 
 ### Completed Demo Day Prep Video
 
-[Current Status Video](https://youtube.com/shorts/Cu1QT25VZb8)
+[Demo Prep Video](https://youtube.com/shorts/Cu1QT25VZb8)
 
 **Pending:** Final presentation, presented by all the members.
 
