@@ -40,8 +40,8 @@ CampusSpot is a mobile application designed for university students to discover,
 - [x] User can search for study locations by name or keyword.
 - [x] User can filter locations based on specific attributes (e.g., quiet zone, has outlets, open late).
 - [x] User can view details and descriptions for a specific study spot.
-- [ ] User can submit a review for a study location.
-- [ ] User can bookmark or save favorite locations to a personal "Saved Spots" list.
+- [x] User can submit a review for a study location.
+- [x] User can bookmark or save favorite locations to a personal "Saved Spots" list.
 
 **Optional Nice-to-have Stories**
 
