@@ -214,10 +214,13 @@ The following GIF demonstrates the CampusSpot application, including its login f
 - Study spot listings for MMC, BBC, and the Engineering Center.
 - Search functionality across study spot names, descriptions, and campus names.
 - Study spot detail pages with descriptions and study environments.
+- Images for every spot and campus.
+- Connected to backend for user sign up/ log in funcionality.
+- 
 
 
 ### Current Development Notes
 
-- Study spot information is currently stored locally in the Swift code.
-- Login uses demo credentials and does not yet connect to a backend authentication service.
-- Account registration, reviews, photo uploads, bookmarks, and backend networking are planned for future implementation.
+- Bookmarks Selections.
+- Reviews submissions.
+- Final meeting before final presentation.
