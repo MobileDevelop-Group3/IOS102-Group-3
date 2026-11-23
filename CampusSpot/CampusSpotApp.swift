@@ -14,8 +14,8 @@ struct CampusSpotApp: App {
 
     init() {
         ParseSwift.initialize(
-            applicationId: "vb7iaWsPs3bLzBfCIrRS3k3oNraWMbjh1IdnUpay",
-            clientKey: "I7fsdF3yr7AaLBsf7sa7yQVUKAoI4oXq7JO6GUTf",
+            applicationId: "RqGHC85EelLM7dR19Av3bzsXFUJm5tFGu91qG6Zc",
+            clientKey: "6343ba62ciym79fqmL0sAscis5o5gkMXHJ72W06q",
             serverURL: URL(string: "https://parseapi.back4app.com")!
         )
     }

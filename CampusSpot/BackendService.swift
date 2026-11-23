@@ -32,110 +32,101 @@ enum BackendService {
         return try await query.find()
     }
 
-    //  Bookmarks
+
+    // Bookmarks
 
     static func fetchUserBookmarks() async throws -> [Bookmark] {
-        guard let currentUser = User.current else {
+        guard let userId = User.current?.objectId else {
             throw BackendServiceError.notAuthenticated
         }
-        let userPointer = try currentUser.toPointer()
-        let query = Bookmark.query("user" == userPointer)
-            .include(["location"])
+
+        let query = Bookmark.query("userId" == userId)
             .order([.descending("createdAt")])
+
         return try await query.find()
     }
 
-    static func isBookmarked(location: Location) async throws -> Bool {
-        guard let currentUser = User.current else {
-            return false
+    static func isBookmarked(spotId: String) async throws -> Bool {
+        guard let userId = User.current?.objectId else {
+            throw BackendServiceError.notAuthenticated
         }
-        let userPointer = try currentUser.toPointer()
-        let locationPointer = try location.toPointer()
-        let query = Bookmark.query("user" == userPointer, "location" == locationPointer)
+
+        let query = Bookmark.query(
+            "userId" == userId,
+            "spotId" == spotId
+        )
+
         let matches = try await query.find()
         return !matches.isEmpty
     }
 
-    // return true if bookmarked after toggle, false if removed
     @discardableResult
-    static func toggleBookmark(for location: Location) async throws -> Bool {
-        guard let currentUser = User.current else {
+    static func toggleBookmark(for spotId: String) async throws -> Bool {
+        guard let userId = User.current?.objectId else {
             throw BackendServiceError.notAuthenticated
         }
-        let userPointer = try currentUser.toPointer()
-        let locationPointer = try location.toPointer()
 
-        let existing = try await Bookmark.query("user" == userPointer, "location" == locationPointer).find()
+        let existing = try await Bookmark.query(
+            "userId" == userId,
+            "spotId" == spotId
+        ).find()
+
         if let first = existing.first {
             try await first.delete()
             return false
         } else {
-            let bookmark = Bookmark(user: userPointer, location: locationPointer)
+            let bookmark = Bookmark(
+                spotId: spotId,
+                userId: userId
+            )
+
             _ = try await bookmark.save()
             return true
         }
     }
 
-    // Reviews & Photo Upload
 
-    static func fetchReviews(for location: Location) async throws -> [Review] {
-        let locationPointer = try location.toPointer()
-        let query = Review.query("location" == locationPointer)
-            .include(["author"])
+
+    // Reviews
+
+    static func fetchReviews(for spotId: String) async throws -> [Review] {
+        let query = Review.query("spotId" == spotId)
             .order([.descending("createdAt")])
+
         return try await query.find()
     }
 
     static func fetchUserReviews() async throws -> [Review] {
-        guard let currentUser = User.current else {
+        guard let userId = User.current?.objectId else {
             throw BackendServiceError.notAuthenticated
         }
-        let authorPointer = try currentUser.toPointer()
-        let query = Review.query("author" == authorPointer)
-            .include(["location"])
+
+        let query = Review.query("userId" == userId)
             .order([.descending("createdAt")])
+
         return try await query.find()
     }
 
     @discardableResult
     static func submitReview(
-        for location: Location,
+        for spotId: String,
         rating: Int,
-        comment: String,
-        imageData: Data? = nil
+        comment: String
     ) async throws -> Review {
-        guard let currentUser = User.current else {
+        guard let userId = User.current?.objectId else {
             throw BackendServiceError.notAuthenticated
-        }
-        let authorPointer = try currentUser.toPointer()
-        let locationPointer = try location.toPointer()
-
-        var uploadedPhoto: ParseFile?
-        if let imageData {
-            let file = ParseFile(name: "review_\(UUID().uuidString).jpg", data: imageData)
-            uploadedPhoto = try await file.save()
         }
 
         let review = Review(
-            author: authorPointer,
-            location: locationPointer,
+            spotId: spotId,
+            userId: userId,
             rating: rating,
-            comment: comment,
-            photo: uploadedPhoto
+            comment: comment
         )
-        let savedReview = try await review.save()
 
-        let allReviews = try await fetchReviews(for: location)
-        let ratings = allReviews.compactMap(\.rating)
-        if !ratings.isEmpty {
-            let avg = Double(ratings.reduce(0, +)) / Double(ratings.count)
-            var updatedLocation = location
-            updatedLocation.averageRating = avg
-            _ = try await updatedLocation.save()
-        }
-
-        return savedReview
+        return try await review.save()
     }
+
 
     // Profile & Session
 

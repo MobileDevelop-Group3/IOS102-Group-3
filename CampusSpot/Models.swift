@@ -69,35 +69,30 @@ extension Location {
     }
 }
 
-// Review
 
+// Review
 struct Review: ParseObject {
-    // Required ParseObject fields
     var objectId: String?
     var createdAt: Date?
     var updatedAt: Date?
     var ACL: ParseACL?
     var originalData: Data?
 
-    // Custom columns match Back4App Review class
-    var author: Pointer<User>?
-    var location: Pointer<Location>?
+    var spotId: String?
+    var userId: String?
     var rating: Int?
     var comment: String?
-    var photo: ParseFile?
 }
 
 // Bookmark
-
 struct Bookmark: ParseObject {
-    // Required ParseObject fields
     var objectId: String?
     var createdAt: Date?
     var updatedAt: Date?
     var ACL: ParseACL?
     var originalData: Data?
 
-    // Custom columns matching Back4App Bookmark class
-    var user: Pointer<User>?
-    var location: Pointer<Location>?
+    var spotId: String?
+    var userId: String?
 }
+

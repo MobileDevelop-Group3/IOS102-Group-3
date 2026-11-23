@@ -521,6 +521,7 @@ let studySpots: [StudySpot] = [
     // MMC
 
     StudySpot(
+        id: "green-library",
         name: "Steven and Dorothea Green Library",
         campus: .mmc,
         description: "Main library with computer labs, seating, quiet floors, and reservable study rooms.",
@@ -528,6 +529,7 @@ let studySpots: [StudySpot] = [
         imageName: "GreenLibrary"
     ),
     StudySpot(
+        id: "marc-building",
         name: "MARC Building",
         campus: .mmc,
         description: "Popular study areas near the entrance and on the third floor.",
@@ -535,6 +537,7 @@ let studySpots: [StudySpot] = [
         imageName: "MARC"
     ),
     StudySpot(
+        id: "innovation-hub",
         name: "FIU Innovation Hub",
         campus: .mmc,
         description: "Flexible study space with high-top tables, cubicles, couches, and whiteboards.",
@@ -542,6 +545,7 @@ let studySpots: [StudySpot] = [
         imageName: "InnovationHub"
     ),
     StudySpot(
+        id: "deuxieme-maison",
         name: "Deuxieme Maison Sky Lounge",
         campus: .mmc,
         description: "Open-air courtyard with a relaxed atmosphere.",
@@ -549,6 +553,7 @@ let studySpots: [StudySpot] = [
         imageName: "DeuxiemeMaison"
     ),
     StudySpot(
+        id: "mango-building",
         name: "MANGO Building",
         campus: .mmc,
         description: "Academic building with study and academic spaces across six stories.",
@@ -556,6 +561,7 @@ let studySpots: [StudySpot] = [
         imageName: "MANGO"
     ),
     StudySpot(
+        id: "graham-center",
         name: "Graham Center",
         campus: .mmc,
         description: "Student center with social areas, food options, and quieter corners.",
@@ -563,6 +569,7 @@ let studySpots: [StudySpot] = [
         imageName: "GrahamCenter"
     ),
     StudySpot(
+        id: "barnes-noble",
         name: "Barnes & Noble at FIU",
         campus: .mmc,
         description: "Seating areas and a second-floor cafe.",
@@ -570,6 +577,7 @@ let studySpots: [StudySpot] = [
         imageName: "BarnesNoble"
     ),
     StudySpot(
+        id: "chemistry-physics",
         name: "Chemistry and Physics Building",
         campus: .mmc,
         description: "Covered outdoor benches with roofs and solar-powered outlets.",
@@ -577,6 +585,7 @@ let studySpots: [StudySpot] = [
         imageName: "ChemistryPhysics"
     ),
     StudySpot(
+        id: "green-lake",
         name: "Green Lake and Campus Courtyards",
         campus: .mmc,
         description: "Outdoor benches and courtyard seating around Green Lake and campus.",
@@ -584,6 +593,7 @@ let studySpots: [StudySpot] = [
         imageName: "GreenLake"
     ),
     StudySpot(
+        id: "chilis-patio",
         name: "Chili's Outdoor Patio",
         campus: .mmc,
         description: "Outdoor patio overlooking the lake and fountain.",
@@ -594,6 +604,7 @@ let studySpots: [StudySpot] = [
     // BBC
 
     StudySpot(
+        id: "hubert-library",
         name: "Hubert Library",
         campus: .bbc,
         description: "Main library with seating, computer labs, quiet zones, and reservable rooms.",
@@ -601,6 +612,7 @@ let studySpots: [StudySpot] = [
         imageName: "HubertLibrary"
     ),
     StudySpot(
+        id: "academic-center-2",
         name: "Academic Center 2",
         campus: .bbc,
         description: "Second-floor shaded benches for studying and group work.",
@@ -608,6 +620,7 @@ let studySpots: [StudySpot] = [
         imageName: "AcademicCenter2"
     ),
     StudySpot(
+        id: "wolfe-center",
         name: "Wolfe University Center",
         campus: .bbc,
         description: "Second and third-floor patios with tables, benches, couches, and student areas.",
@@ -615,6 +628,7 @@ let studySpots: [StudySpot] = [
         imageName: "WolfeCenter"
     ),
     StudySpot(
+        id: "marine-science",
         name: "By the Bay / Marine Science Area",
         campus: .bbc,
         description: "Outdoor study areas near the water with bay views.",
@@ -622,6 +636,7 @@ let studySpots: [StudySpot] = [
         imageName: "MarineScience"
     ),
     StudySpot(
+        id: "aquatic-center",
         name: "Aquatic Center Swinging Benches",
         campus: .bbc,
         description: "Scenic swinging benches near the water.",
@@ -632,6 +647,7 @@ let studySpots: [StudySpot] = [
     // Engineering Center
 
     StudySpot(
+        id: "engineering-library",
         name: "Engineering Library Services (EC-2780)",
         campus: .engineering,
         description: "Second-floor study space with quiet seating, group rooms, printing, and device checkouts.",
@@ -639,6 +655,7 @@ let studySpots: [StudySpot] = [
         imageName: "EngineeringLibrary"
     ),
     StudySpot(
+        id: "engineering-labs",
         name: "Engineering Information Center and Labs",
         campus: .engineering,
         description: "Specialized labs and group study areas. Some rooms require advance reservations.",
@@ -969,14 +986,32 @@ struct StudySpotRow: View {
     }
 }
 
+
 // MARK: - Study Spot Detail
 
 struct StudySpotDetailView: View {
+
     let spot: StudySpot
+
+    // Bookmark
+    @State private var isBookmarked = false
+    @State private var isLoadingBookmark = false
+    @State private var bookmarkError = ""
+
+    // Reviews
+    @State private var reviews: [Review] = []
+    @State private var selectedRating = 5
+    @State private var reviewComment = ""
+    @State private var isLoadingReviews = false
+    @State private var isSubmittingReview = false
+    @State private var reviewError = ""
+    @State private var reviewMessage = ""
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
+
+                // Study Spot Image
                 ZStack {
                     if let imageName = spot.imageName {
                         Image(imageName)
@@ -995,19 +1030,42 @@ struct StudySpotDetailView: View {
                     }
                 }
 
+                // Study Spot Name
                 Text(spot.name)
                     .font(.title2)
                     .fontWeight(.bold)
 
+                // Bookmark Button
+                HStack {
+                    Text("Save this study spot")
+                        .font(.subheadline)
+
+                    Spacer()
+
+                    Button {
+                        Task {
+                            await toggleBookmark()
+                        }
+                    } label: {
+                        Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+                            .font(.title2)
+                    }
+                    .disabled(isLoadingBookmark)
+                }
+                .padding(.vertical, 8)
+
+                // Campus
                 Label(spot.campus.rawValue, systemImage: "building.2")
                     .foregroundStyle(.secondary)
 
+                // About
                 Text("About this spot")
                     .font(.headline)
 
                 Text(spot.description)
                     .foregroundStyle(.secondary)
 
+                // Environment
                 Text("Study Environment")
                     .font(.headline)
 
@@ -1016,76 +1074,495 @@ struct StudySpotDetailView: View {
                     .padding(.vertical, 8)
                     .background(Color.blue.opacity(0.1))
                     .clipShape(Capsule())
+
+                Divider()
+
+                // MARK: - Write a Review
+
+                Text("Leave a Review")
+                    .font(.headline)
+
+                Text("How would you rate this study spot?")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                // Star Rating Selector
+                HStack(spacing: 12) {
+                    ForEach(1...5, id: \.self) { rating in
+                        Button {
+                            selectedRating = rating
+                        } label: {
+                            Image(systemName: rating <= selectedRating ? "star.fill" : "star")
+                                .font(.title2)
+                                .foregroundStyle(.yellow)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                // Review Comment
+                TextField("Write your review...", text: $reviewComment, axis: .vertical)
+                    .lineLimit(3...6)
+                    .padding(12)
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                // Submit Button
+                Button {
+                    Task {
+                        await submitReview()
+                    }
+                } label: {
+                    HStack {
+                        if isSubmittingReview {
+                            ProgressView()
+                                .tint(.white)
+                        }
+
+                        Text(isSubmittingReview ? "Submitting..." : "Submit Review")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                .disabled(isSubmittingReview || reviewComment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                if !reviewError.isEmpty {
+                    Text(reviewError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+
+                if !reviewMessage.isEmpty {
+                    Text(reviewMessage)
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                }
+
+                Divider()
+
+                // MARK: - Existing Reviews
+
+                Text("Reviews")
+                    .font(.headline)
+
+                if isLoadingReviews {
+                    ProgressView("Loading reviews...")
+                        .frame(maxWidth: .infinity)
+                } else if reviews.isEmpty {
+                    Text("No reviews yet. Be the first to review this spot!")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(reviews.indices, id: \.self) { index in
+                        VStack(alignment: .leading, spacing: 8) {
+
+                            HStack {
+                                HStack(spacing: 3) {
+                                    ForEach(1...5, id: \.self) { star in
+                                        Image(systemName: star <= (reviews[index].rating ?? 0) ? "star.fill" : "star")
+                                            .foregroundStyle(.yellow)
+                                    }
+                                }
+
+                                Spacer()
+
+                                if let date = reviews[index].createdAt {
+                                    Text(date, style: .date)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            if let comment = reviews[index].comment {
+                                Text(comment)
+                                    .font(.subheadline)
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
             }
             .padding()
         }
         .navigationTitle("Study Spot")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await loadBookmarkStatus()
+            await loadReviews()
+        }
+    }
+
+    // MARK: - Bookmark Functions
+
+    private func loadBookmarkStatus() async {
+        do {
+            isBookmarked = try await BackendService.isBookmarked(spotId: spot.id)
+        } catch {
+            print("Failed to load bookmark status: \(error.localizedDescription)")
+        }
+    }
+
+    private func toggleBookmark() async {
+        guard !isLoadingBookmark else { return }
+
+        isLoadingBookmark = true
+        defer { isLoadingBookmark = false }
+
+        do {
+            let result = try await BackendService.toggleBookmark(for: spot.id)
+            isBookmarked = result
+            bookmarkError = ""
+        } catch {
+            bookmarkError = error.localizedDescription
+            print("Bookmark error: \(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Review Functions
+
+    private func loadReviews() async {
+        isLoadingReviews = true
+        defer { isLoadingReviews = false }
+
+        do {
+            reviews = try await BackendService.fetchReviews(for: spot.id)
+        } catch {
+            reviewError = "Could not load reviews."
+            print("Review loading error: \(error.localizedDescription)")
+        }
+    }
+
+    private func submitReview() async {
+        guard !isSubmittingReview else { return }
+
+        let comment = reviewComment.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !comment.isEmpty else {
+            reviewError = "Please write a comment before submitting."
+            return
+        }
+
+        isSubmittingReview = true
+        reviewError = ""
+        reviewMessage = ""
+
+        defer { isSubmittingReview = false }
+
+        do {
+            let newReview = try await BackendService.submitReview(
+                for: spot.id,
+                rating: selectedRating,
+                comment: comment
+            )
+
+            reviews.insert(newReview, at: 0)
+            reviewComment = ""
+            selectedRating = 5
+            reviewMessage = "Your review was submitted successfully!"
+
+        } catch {
+            reviewError = "Could not submit your review. Please try again."
+            print("Review submission error: \(error.localizedDescription)")
+        }
     }
 }
+
 
 // MARK: - Bookmarks Tab
 
 struct BookmarksView: View {
+    @State private var savedSpots: [StudySpot] = []
+    @State private var isLoading = false
+    @State private var errorMessage = ""
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: 15) {
+            VStack(alignment: .leading, spacing: 15) {
                 CampusSpotHeader()
-
-                Spacer()
-
-                Image(systemName: "bookmark")
-                    .font(.system(size: 45))
-                    .foregroundStyle(.secondary)
 
                 Text("Your Bookmarks")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .padding(.horizontal)
 
-                Text("Your saved study spots will appear here.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if isLoading {
+                    Spacer()
+                    ProgressView("Loading bookmarks...")
+                    Spacer()
+                } else if !errorMessage.isEmpty {
+                    Spacer()
+                    Text(errorMessage)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                    Spacer()
+                } else if savedSpots.isEmpty {
+                    Spacer()
+                    VStack(spacing: 12) {
+                        Image(systemName: "bookmark")
+                            .font(.system(size: 45))
+                            .foregroundStyle(.secondary)
 
-                Spacer()
+                        Text("No bookmarks yet")
+                            .font(.headline)
+
+                        Text("Save your favorite study spots to find them here.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    Spacer()
+                } else {
+                    List(savedSpots) { spot in
+                        NavigationLink(
+                            destination: StudySpotDetailView(spot: spot)
+                        ) {
+                            StudySpotRow(spot: spot)
+                        }
+                    }
+                    .listStyle(.plain)
+                }
             }
             .toolbar(.hidden, for: .navigationBar)
+            .task {
+                await loadBookmarks()
+            }
+            .refreshable {
+                await loadBookmarks()
+            }
+        }
+    }
+
+    private func loadBookmarks() async {
+        isLoading = true
+        errorMessage = ""
+        defer { isLoading = false }
+
+        do {
+            let bookmarks = try await BackendService.fetchUserBookmarks()
+            let savedIDs = Set(bookmarks.compactMap { $0.spotId })
+
+            savedSpots = studySpots.filter {
+                savedIDs.contains($0.id)
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Failed to load bookmarks: \(error.localizedDescription)")
         }
     }
 }
 
+
 // MARK: - Profile Tab
 
 struct ProfileView: View {
-    var onLogout: () -> Void
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 15) {
-                CampusSpotHeader()
 
-                Spacer()
+   var onLogout: () -> Void
 
-                Image(systemName: "person.crop.circle")
-                    .font(.system(size: 55))
-                    .foregroundStyle(.secondary)
+   @State private var displayName = ""
+   @State private var email = ""
+   @State private var bookmarkCount = 0
+   @State private var reviewCount = 0
+   @State private var userReviews: [Review] = []
+   @State private var isLoading = true
+   @State private var errorMessage = ""
 
-                Text("Profile")
-                    .font(.title2)
-                    .fontWeight(.semibold)
+   var body: some View {
 
-                Text("Your profile information will appear here.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+       NavigationStack {
 
-            
-                Button("Log out", role: .destructive) {
-                    onLogout()
-                }
-                .padding(.top, 12)
-                Spacer()
-            }
-            .toolbar(.hidden, for: .navigationBar)
-        }
-    }
+           ScrollView {
+
+               VStack(alignment: .leading, spacing: 20) {
+
+                   CampusSpotHeader()
+
+                   // Profile Information
+                   VStack(spacing: 10) {
+
+                       Image(systemName: "person.crop.circle.fill")
+                           .font(.system(size: 75))
+                           .foregroundStyle(.blue)
+
+                       Text(displayName.isEmpty ? "CampusSpot User" : displayName)
+                           .font(.title2)
+                           .fontWeight(.bold)
+
+                       Text(email)
+                           .font(.subheadline)
+                           .foregroundStyle(.secondary)
+                   }
+                   .frame(maxWidth: .infinity)
+                   .padding(.vertical, 20)
+
+                   // Account Statistics
+                   HStack(spacing: 12) {
+
+                       StatCard(
+                           title: "Bookmarks",
+                           count: bookmarkCount,
+                           icon: "bookmark.fill"
+                       )
+
+                       StatCard(
+                           title: "Reviews",
+                           count: reviewCount,
+                           icon: "star.fill"
+                       )
+                   }
+
+                   Divider()
+
+                   // User Reviews
+                   Text("My Reviews")
+                       .font(.headline)
+
+                   if isLoading {
+
+                       ProgressView("Loading profile...")
+                           .frame(maxWidth: .infinity)
+
+                   } else if !errorMessage.isEmpty {
+
+                       Text(errorMessage)
+                           .foregroundStyle(.secondary)
+
+                   } else if userReviews.isEmpty {
+
+                       Text("You haven't submitted any reviews yet.")
+                           .font(.subheadline)
+                           .foregroundStyle(.secondary)
+
+                   } else {
+
+                       ForEach(userReviews.indices, id: \.self) { index in
+
+                           let review = userReviews[index]
+                           let spotName = studySpots.first {
+                               $0.id == review.spotId
+                           }?.name ?? "Study Spot"
+
+                           VStack(alignment: .leading, spacing: 8) {
+
+                               Text(spotName)
+                                   .font(.subheadline)
+                                   .fontWeight(.semibold)
+
+                               HStack(spacing: 3) {
+                                   ForEach(1...5, id: \.self) { star in
+                                       Image(
+                                           systemName: star <= (review.rating ?? 0)
+                                           ? "star.fill"
+                                           : "star"
+                                       )
+                                       .foregroundStyle(.yellow)
+                                   }
+                               }
+
+                               Text(review.comment ?? "")
+                                   .font(.subheadline)
+                                   .foregroundStyle(.secondary)
+
+                               if let date = review.createdAt {
+                                   Text(date, style: .date)
+                                       .font(.caption)
+                                       .foregroundStyle(.secondary)
+                               }
+                           }
+                           .padding()
+                           .frame(maxWidth: .infinity, alignment: .leading)
+                           .background(Color(.secondarySystemBackground))
+                           .clipShape(RoundedRectangle(cornerRadius: 12))
+                       }
+                   }
+
+                   // Log Out
+                   Button("Log Out", role: .destructive) {
+                       onLogout()
+                   }
+                   .frame(maxWidth: .infinity)
+                   .padding(.top, 15)
+               }
+               .padding()
+           }
+           .toolbar(.hidden, for: .navigationBar)
+           .task {
+               await loadProfile()
+           }
+           .refreshable {
+               await loadProfile()
+           }
+       }
+   }
+
+   // MARK: - Load Profile Data
+
+   private func loadProfile() async {
+
+       isLoading = true
+       errorMessage = ""
+
+       defer {
+           isLoading = false
+       }
+
+       displayName = BackendService.currentUserDisplayName()
+       email = BackendService.currentUserEmail()
+
+       do {
+           async let bookmarks = BackendService.fetchUserBookmarks()
+           async let reviews = BackendService.fetchUserReviews()
+
+           let loadedBookmarks = try await bookmarks
+           let loadedReviews = try await reviews
+
+           bookmarkCount = loadedBookmarks.count
+           userReviews = loadedReviews
+           reviewCount = loadedReviews.count
+
+       } catch {
+           errorMessage = "Unable to load your profile information."
+           print("Profile loading error: \(error.localizedDescription)")
+       }
+   }
+}
+
+// MARK: - Profile Stat Card
+
+struct StatCard: View {
+
+   let title: String
+   let count: Int
+   let icon: String
+
+   var body: some View {
+
+       VStack(spacing: 8) {
+
+           Image(systemName: icon)
+               .font(.title2)
+               .foregroundStyle(.blue)
+
+           Text("\(count)")
+               .font(.title2)
+               .fontWeight(.bold)
+
+           Text(title)
+               .font(.caption)
+               .foregroundStyle(.secondary)
+       }
+       .frame(maxWidth: .infinity)
+       .padding()
+       .background(Color(.secondarySystemBackground))
+       .clipShape(RoundedRectangle(cornerRadius: 12))
+   }
 }
 
 // MARK: - Preview
