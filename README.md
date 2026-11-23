@@ -195,6 +195,11 @@ The following GIF demonstrates the CampusSpot application, including its login f
 
 ![CampusSpot Demo](Current%20Status%20(1).gif)
 
+### Completed Demo Day prep video linked in README
+
+- **Current Status Video:** `(https://youtube.com/shorts/Ac0ioidZSmw?feature=share)`
+Pending on final updates, and be discribed by team members.
+
 ### Completed Functionality
 
 - Welcome, Login, and Sign Up interfaces.
@@ -208,10 +213,6 @@ The following GIF demonstrates the CampusSpot application, including its login f
 - Search functionality across study spot names, descriptions, and campus names.
 - Study spot detail pages with descriptions and study environments.
 
-### Demo Login Credentials
-
-- **Email:** `demo@campusspot.com`
-- **Password:** `Campus123!`
 
 ### Current Development Notes
 
