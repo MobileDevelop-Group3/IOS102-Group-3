@@ -199,7 +199,7 @@ The following GIF demonstrates the CampusSpot application, including its login f
 
 [Current Status Video](https://youtube.com/shorts/Cu1QT25VZb8)
 
-**Pending:** Final updates and descriptions from each team member.
+**Pending:** Final presentation, presented by all the members.
 
 ---
 ### Completed Functionality
